@@ -1,0 +1,8 @@
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/positronsZ.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/B1.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/edit_cache.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/rebuild_cache.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/list_install_components.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/install.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/install/local.dir
+/Users/semenraydun/Desktop/GEANT4/examples/basic/B1/build/CMakeFiles/install/strip.dir

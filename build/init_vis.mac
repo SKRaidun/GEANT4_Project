@@ -1,0 +1,11 @@
+# Macro file for the initialization of example B1
+# in interactive session
+#
+# Set some default verbose
+
+
+#
+# Initialize kernel
+/run/initialize
+/run/beamOn 10000
+
