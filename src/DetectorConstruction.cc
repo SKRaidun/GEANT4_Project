@@ -36,6 +36,22 @@ std::vector<G4ThreeVector> DetectorConstruction::CalculateDodecahedronVertices(G
     return vertices;
 }
 
+std::vector<G4ThreeVector> DetectorConstruction::CalculateIcosahedronVertices(G4double radius) {
+    static const G4double phi = (1.0 + std::sqrt(5.0)) / 2.0;
+
+    std::vector<G4ThreeVector> vertices = {
+        {0, 1, phi}, {0, 1, -phi}, {0, -1, phi}, {0, -1, -phi},
+        {1, phi, 0}, {1, -phi, 0}, {-1, phi, 0}, {-1, -phi, 0},
+        {phi, 0, 1}, {-phi, 0, 1}, {phi, 0, -1}, {-phi, 0, -1}
+    };
+
+    for (auto& vertex : vertices) {
+        vertex *= (radius / std::sqrt(1 + phi * phi));
+    }
+
+    return vertices;
+}
+
 G4LogicalVolume* DetectorConstruction::GetScoringVolume() const {
     return fScoringVolume;
 }
@@ -160,7 +176,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
 
 
-    // Определяем размеры
     G4double pmtWindowRadius = 101 * mm;
     G4double pmtTubeRadius1 = 42 * mm;
     G4double pmtTubeHeight1 = 101 * mm;
@@ -168,9 +183,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4double pmtTubeHeight2 = 55 * mm;
     G4double pmtPhotocatodRadius = 95 * mm;
 
-    // Определяем материалы
     G4Material* pmtTubeMaterial = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    G4Material* pmtWindowMaterial = PMMA; // Предполагаем, что PMMA уже определен
+    G4Material* pmtWindowMaterial = PMMA; 
 
     if (!pmtWindowMaterial) {
         G4cerr << "Error: PMT window material is not found!" << G4endl;
@@ -181,8 +195,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Element* antimony = nist->FindOrBuildElement("Sb"); // Висмут
     G4Element* cesium = nist->FindOrBuildElement("Cs"); // Цезий
 
-    G4Material* photocathodeMaterial = new G4Material("Photocathode", 0.86 * g / cm3, 2); // Плотность как у боросиликатного стекла
-    photocathodeMaterial->AddElement(nist->FindOrBuildElement("C", false), 10);  // Пропорции
+    G4Material* photocathodeMaterial = new G4Material("Photocathode", 0.86 * g / cm3, 2); 
+    photocathodeMaterial->AddElement(nist->FindOrBuildElement("C", false), 10); 
     photocathodeMaterial->AddElement(nist->FindOrBuildElement("H", false), 22); 
 
     
@@ -206,32 +220,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4ThreeVector lowerOffset(0, 0, -(pmtTubeHeight1 / 2 + pmtTubeHeight2 / 2)); // Смещение по оси Z
     new G4PVPlacement(nullptr, lowerOffset, pmtBodyLowerLog, "PMTBodyLower", pmtBodyUpperLog, false, 1);
 
-    // Определяем материалы для фотокатода
-    // G4Element* potassium = nist->FindOrBuildElement("K"); // Калий
-    // G4Element* antimony = nist->FindOrBuildElement("Sb"); // Висмут
-    // G4Element* cesium = nist->FindOrBuildElement("Cs"); // Цезий
-
-    // Создаем новый материал для фотокатода
-//G4Material* photocathodeMaterial = new G4Material("Photocathode", 1.23 * g / cm3, 3); // Плотность как у боросиликатного стекла
-// photocathodeMaterial->AddElement(potassium, 50. * perCent); // Пропорции
-// photocathodeMaterial->AddElement(antimony, 30. * perCent);
-// photocathodeMaterial->AddElement(cesium, 20. * perCent);
-
-//Размещаем фотокатод внутри окна ФЭУ
-// G4ThreeVector photocatodOffset(0, 0, 0); // Смещение по оси Z
-// new G4PVPlacement(nullptr, photocatodOffset, pmtPhotocatodLog, "Photocathode", pmtWindowLog, false, 0);
-
-    // Определяем внешнюю оболочку
-    // G4Tubs* envelopeShell = new G4Tubs("EnvelopeShell", 0, 0.62 * m, 0.92 * m, 0, 360 * deg);
-    // G4LogicalVolume* envelopeLog = new G4LogicalVolume(envelopeShell, nist->FindOrBuildMaterial("G4_AIR"), "Envelope");
-
-    // // Размещаем оболочку вокруг всего детектора
-    // new G4PVPlacement(nullptr, G4ThreeVector(), envelopeLog, "Envelope", worldLog, false, 0);
-
-    // Создаем физический объем для всего детектора
+    
     fScoringVolume = new G4LogicalVolume(worldBox, nist->FindOrBuildMaterial("G4_AIR"), "ScoringVolume");
-
-    //G4LogicalVolume* pmtLog = pmtPhotocatodLog;
 
 
     ConstructSDandField();
